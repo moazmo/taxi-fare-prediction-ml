@@ -2,6 +2,14 @@
 
 A professional full-stack machine learning web application for predicting taxi fares in New York City. Built with FastAPI, React, and TypeScript, featuring a high-accuracy Random Forest model (R² = 0.991, MAE = $0.041) with real-time predictions and interactive mapping.
 
+## 📸 Application Preview
+
+![Taxi Fare Prediction Web Application](web_app_image.png)
+
+*Interactive web interface with Leaflet maps, Material-UI components, and real-time fare predictions*
+
+---
+
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)
 ![React](https://img.shields.io/badge/react-18.2.0-blue.svg)
