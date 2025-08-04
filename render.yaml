@@ -63,7 +63,7 @@ services:
         fromService:
           type: web
           name: taxi-fare-api
-          property: url
+          property: host
       - key: REACT_APP_ENVIRONMENT
         value: production
       - key: REACT_APP_DEFAULT_LAT

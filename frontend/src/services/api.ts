@@ -15,8 +15,17 @@ import {
 } from '../types/api';
 
 // Create axios instance with base configuration
+const getBaseURL = () => {
+  const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+  // If API URL is just a hostname (from Render), prepend https://
+  if (apiUrl && !apiUrl.startsWith('http://') && !apiUrl.startsWith('https://')) {
+    return `https://${apiUrl}`;
+  }
+  return apiUrl;
+};
+
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8000',
+  baseURL: getBaseURL(),
   timeout: 30000, // 30 seconds
   headers: {
     'Content-Type': 'application/json',
