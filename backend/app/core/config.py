@@ -26,22 +26,13 @@ class Settings(BaseSettings):
     VERSION: str = "1.0.0"
     
     # CORS settings - Updated for separate Render deployments
-    CORS_ORIGINS: List[str] = [
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://localhost:8080",
-        "http://127.0.0.1:8080",
-        "https://*.onrender.com"  # Allow all Render domains
-    ]
+    CORS_ORIGINS: str = "*"  # Changed to string to avoid JSON parsing issues
     
-    @validator("CORS_ORIGINS", pre=True)
-    def parse_cors_origins(cls, v):
-        """Parse CORS origins from environment variable."""
-        if isinstance(v, str):
-            if v == "*":
-                return ["*"]  # Allow all origins
-            return [origin.strip() for origin in v.split(",") if origin.strip()]
-        return v
+    def get_cors_origins_list(self) -> List[str]:
+        """Convert CORS_ORIGINS string to list."""
+        if self.CORS_ORIGINS == "*":
+            return ["*"]
+        return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
     
     # Model settings
     MODEL_PATH: str = "./models/best_taxi_fare_model.pkl"
@@ -88,15 +79,6 @@ class Settings(BaseSettings):
         if v.lower() not in allowed:
             raise ValueError(f"Log level must be one of: {allowed}")
         return v.lower()
-    
-    @validator("CORS_ORIGINS", pre=True)
-    def assemble_cors_origins(cls, v):
-        """Parse CORS origins from string or list."""
-        if isinstance(v, str):
-            return [i.strip() for i in v.split(",")]
-        elif isinstance(v, list):
-            return v
-        raise ValueError("CORS_ORIGINS must be a string or list")
     
     @validator("MODEL_PATH")
     def validate_model_path(cls, v):
