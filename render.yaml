@@ -25,10 +25,7 @@ services:
       - key: HOST
         value: 0.0.0.0
       - key: PORT
-        fromService:
-          type: web
-          name: taxi-fare-api
-          property: port
+        generateValue: true
       - key: WORKERS
         value: 2
       - key: MODEL_PATH
@@ -38,17 +35,11 @@ services:
       - key: METADATA_PATH
         value: ./models/final_model_metadata.json
       - key: CORS_ORIGINS
-        value: https://taxi-fare-frontend.onrender.com,http://localhost:3000
-      - key: PYTHONPATH
-        value: /opt/render/project/src
+        value: "*"
       - key: PYTHONUNBUFFERED
         value: 1
       - key: PYTHONDONTWRITEBYTECODE
         value: 1
-    disk:
-      name: taxi-api-disk
-      mountPath: /opt/render/project/src/logs
-      sizeGB: 1
 
   # Frontend Service (React + TypeScript)
   - type: web
@@ -72,7 +63,7 @@ services:
         fromService:
           type: web
           name: taxi-fare-api
-          property: host
+          property: url
       - key: REACT_APP_ENVIRONMENT
         value: production
       - key: REACT_APP_DEFAULT_LAT
@@ -85,53 +76,3 @@ services:
         value: false
       - key: CI
         value: false
-    disk:
-      name: taxi-frontend-disk
-      mountPath: /opt/render/project/src/build
-      sizeGB: 1
-
-# Optional: Database service (for future enhancements)
-databases:
-  - name: taxi-predictions-db
-    databaseName: taxi_predictions
-    user: taxi_user
-    plan: starter  # Free tier available
-    region: oregon
-    version: "15"  # PostgreSQL version
-
-# Optional: Redis service (for caching)
-# - name: taxi-cache
-#   type: redis
-#   plan: starter
-#   region: oregon
-#   maxmemoryPolicy: allkeys-lru
-
-# Environment Groups (shared environment variables)
-envVarGroups:
-  - name: shared-config
-    envVars:
-      - key: TZ
-        value: UTC
-      - key: APP_VERSION
-        value: 1.0.0
-      - key: DEPLOYMENT_PLATFORM
-        value: render
-
-# Notification settings
-notifications:
-  - type: email
-    emails:
-      - your-email@example.com  # Replace with your email
-    events:
-      - deploy-succeeded
-      - deploy-failed
-      - service-suspended
-
-# Custom domains (optional - configure after deployment)
-# domains:
-#   - name: api.yourdomain.com
-#     type: apex
-#     service: taxi-fare-api
-#   - name: app.yourdomain.com
-#     type: apex
-#     service: taxi-fare-frontend
