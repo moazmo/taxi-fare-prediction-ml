@@ -1,0 +1,137 @@
+# Render Blueprint Configuration for Taxi Fare Prediction ML Application
+# This file defines the complete infrastructure for deploying both backend and frontend services
+
+services:
+  # Backend API Service (FastAPI + ML Model)
+  - type: web
+    name: taxi-fare-api
+    runtime: python
+    plan: starter  # Can be upgraded to standard/pro for production
+    region: oregon  # Choose region closest to your users
+    branch: main
+    rootDir: backend
+    buildCommand: |
+      pip install --upgrade pip
+      pip install -r requirements.txt
+    startCommand: |
+      gunicorn app.main:app -w 2 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:$PORT --timeout 120 --keep-alive 5 --max-requests 1000 --max-requests-jitter 100
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: LOG_LEVEL
+        value: info
+      - key: HOST
+        value: 0.0.0.0
+      - key: PORT
+        fromService:
+          type: web
+          name: taxi-fare-api
+          property: port
+      - key: WORKERS
+        value: 2
+      - key: MODEL_PATH
+        value: ./models/best_taxi_fare_model.pkl
+      - key: PROCESSOR_PATH
+        value: ./models/feature_processor.pkl
+      - key: METADATA_PATH
+        value: ./models/final_model_metadata.json
+      - key: CORS_ORIGINS
+        value: https://taxi-fare-frontend.onrender.com,http://localhost:3000
+      - key: PYTHONPATH
+        value: /opt/render/project/src
+      - key: PYTHONUNBUFFERED
+        value: 1
+      - key: PYTHONDONTWRITEBYTECODE
+        value: 1
+    disk:
+      name: taxi-api-disk
+      mountPath: /opt/render/project/src/logs
+      sizeGB: 1
+
+  # Frontend Service (React + TypeScript)
+  - type: web
+    name: taxi-fare-frontend
+    runtime: node
+    plan: starter  # Can be upgraded to standard/pro for production
+    region: oregon  # Same region as backend for lower latency
+    branch: main
+    rootDir: frontend
+    buildCommand: |
+      npm ci
+      npm run build:production
+    startCommand: |
+      npm run serve
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: REACT_APP_API_URL
+        fromService:
+          type: web
+          name: taxi-fare-api
+          property: host
+      - key: REACT_APP_ENVIRONMENT
+        value: production
+      - key: REACT_APP_DEFAULT_LAT
+        value: 40.7589
+      - key: REACT_APP_DEFAULT_LNG
+        value: -73.9851
+      - key: REACT_APP_DEFAULT_ZOOM
+        value: 12
+      - key: GENERATE_SOURCEMAP
+        value: false
+      - key: CI
+        value: false
+    disk:
+      name: taxi-frontend-disk
+      mountPath: /opt/render/project/src/build
+      sizeGB: 1
+
+# Optional: Database service (for future enhancements)
+databases:
+  - name: taxi-predictions-db
+    databaseName: taxi_predictions
+    user: taxi_user
+    plan: starter  # Free tier available
+    region: oregon
+    version: "15"  # PostgreSQL version
+
+# Optional: Redis service (for caching)
+# - name: taxi-cache
+#   type: redis
+#   plan: starter
+#   region: oregon
+#   maxmemoryPolicy: allkeys-lru
+
+# Environment Groups (shared environment variables)
+envVarGroups:
+  - name: shared-config
+    envVars:
+      - key: TZ
+        value: UTC
+      - key: APP_VERSION
+        value: 1.0.0
+      - key: DEPLOYMENT_PLATFORM
+        value: render
+
+# Notification settings
+notifications:
+  - type: email
+    emails:
+      - your-email@example.com  # Replace with your email
+    events:
+      - deploy-succeeded
+      - deploy-failed
+      - service-suspended
+
+# Custom domains (optional - configure after deployment)
+# domains:
+#   - name: api.yourdomain.com
+#     type: apex
+#     service: taxi-fare-api
+#   - name: app.yourdomain.com
+#     type: apex
+#     service: taxi-fare-frontend

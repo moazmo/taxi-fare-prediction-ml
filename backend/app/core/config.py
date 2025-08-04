@@ -25,12 +25,14 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Taxi Fare Prediction API"
     VERSION: str = "1.0.0"
     
-    # CORS settings
+    # CORS settings - Updated for Render deployment
     CORS_ORIGINS: List[str] = [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "http://localhost:8080",
-        "http://127.0.0.1:8080"
+        "http://127.0.0.1:8080",
+        "https://taxi-fare-frontend.onrender.com",
+        "https://*.onrender.com"
     ]
     
     # Model settings
@@ -38,10 +40,10 @@ class Settings(BaseSettings):
     PROCESSOR_PATH: str = "./models/feature_processor.pkl"
     METADATA_PATH: str = "./models/final_model_metadata.json"
     
-    # Server settings
+    # Server settings - Updated for Render deployment
     HOST: str = "0.0.0.0"
-    PORT: int = 8000
-    WORKERS: int = 1
+    PORT: int = int(os.getenv("PORT", 8000))  # Render provides PORT env var
+    WORKERS: int = int(os.getenv("WORKERS", 1))
     
     # Performance settings
     MAX_PREDICTION_TIME: float = 5.0  # seconds

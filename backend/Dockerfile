@@ -1,6 +1,7 @@
 # Taxi Fare Prediction API - Backend Dockerfile
+# Updated for Render deployment with Python 3.11
 
-FROM python:3.9-slim
+FROM python:3.11-slim
 
 # Set working directory
 WORKDIR /app
@@ -15,8 +16,9 @@ RUN apt-get update && apt-get install -y \
 # Copy requirements first for better caching
 COPY requirements.txt .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Upgrade pip and install Python dependencies
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY . .
@@ -27,6 +29,12 @@ RUN mkdir -p logs models
 # Set environment variables
 ENV PYTHONPATH=/app
 ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Create non-root user for security
+RUN adduser --disabled-password --gecos '' --shell /bin/bash user && \
+    chown -R user:user /app
+USER user
 
 # Expose port
 EXPOSE 8000
