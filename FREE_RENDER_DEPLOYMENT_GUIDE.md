@@ -80,11 +80,11 @@ build
 ```
 
 ### Step 4: Environment Variables
-**⚠️ IMPORTANT**: Replace `YOUR-BACKEND-URL` with the actual URL from Part 1!
+**⚠️ IMPORTANT**: Use your actual backend URL from Part 1!
 
 ```
 NODE_ENV=production
-REACT_APP_API_URL=https://YOUR-BACKEND-URL.onrender.com
+REACT_APP_API_URL=https://taxi-fare-api.onrender.com
 REACT_APP_ENVIRONMENT=production
 REACT_APP_DEFAULT_LAT=40.7589
 REACT_APP_DEFAULT_LNG=-73.9851
