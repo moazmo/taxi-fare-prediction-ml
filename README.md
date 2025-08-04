@@ -2,6 +2,21 @@
 
 A professional full-stack machine learning web application for predicting taxi fares in New York City. Built with FastAPI, React, and TypeScript, featuring a high-accuracy Random Forest model (R² = 0.991, MAE = $0.041) with real-time predictions and interactive mapping.
 
+## 🌐 **LIVE DEMO - TRY IT NOW!**
+**✅ The application is live and ready to use on Render's free tier!**
+
+### 🔗 **Live Links:**
+- **🎯 Frontend App**: https://taxi-fare-frontend-wf09.onrender.com/
+- **⚡ Backend API**: https://taxi-fare-api.onrender.com
+
+### 📋 **How to Use the Live Demo:**
+1. **First Step**: Click the **Backend API** link above to wake up the server (may take 1-2 minutes)
+2. **Second Step**: Click the **Frontend App** link to open the web application
+3. **Initial Load**: Please wait 1-2 minutes for free services to wake up on first access
+4. **Start Predicting**: Click on the map to set pickup/dropoff locations and get ML predictions!
+
+---
+
 ## 📸 Application Preview
 
 ![Taxi Fare Prediction Web Application](web_app_image.png)

@@ -1,5 +1,20 @@
 # 🚀 Complete Free Render Deployment Guide
 
+## 🌐 **LIVE DEPLOYMENT**
+**✅ The application is now live and ready to use!**
+
+### 🔗 **Live Links:**
+- **🎯 Frontend App**: https://taxi-fare-frontend-wf09.onrender.com/
+- **⚡ Backend API**: https://taxi-fare-api.onrender.com
+
+### 📋 **How to Use:**
+1. **First**: Open the backend link above to wake up the API (may take 1-2 minutes)
+2. **Then**: Open the frontend app link 
+3. **Wait**: Initial load may take 1-2 minutes as free services wake up
+4. **Enjoy**: Click on the map to predict taxi fares with ML!
+
+---
+
 ## Overview
 This guide shows how to deploy the Taxi Fare Prediction ML application using Render's **free tier** by deploying backend and frontend as separate services.
 
