@@ -34,6 +34,15 @@ class Settings(BaseSettings):
         "https://*.onrender.com"  # Allow all Render domains
     ]
     
+    @validator("CORS_ORIGINS", pre=True)
+    def parse_cors_origins(cls, v):
+        """Parse CORS origins from environment variable."""
+        if isinstance(v, str):
+            if v == "*":
+                return ["*"]  # Allow all origins
+            return [origin.strip() for origin in v.split(",") if origin.strip()]
+        return v
+    
     # Model settings
     MODEL_PATH: str = "./models/best_taxi_fare_model.pkl"
     PROCESSOR_PATH: str = "./models/feature_processor.pkl"
